@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, App } from 'ionic-angular';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { LoginPage } from '../login/login';
 
 @Component({
   selector: 'page-home',
@@ -10,17 +12,20 @@ export class HomePage {
   taskList = [];
   taskName: string = "";
 
-  @ViewChild('taskInput') input;
+  // @ViewChild('taskInput') input;
 
   constructor(public navCtrl: NavController, 
-              public alertCtrl: AlertController) {
+              public alertCtrl: AlertController,
+              public afAuth: AngularFireAuth,
+              public app: App
+              ) {
   }
 
-  ionViewDidLoad(){
-    setTimeout(() => {
-        this.input.setFocus();
-    }, 350);
-  }
+  // ionViewDidLoad(){
+  //   setTimeout(() => {
+  //       this.input.setFocus();
+  //   }, 350);
+  // }
 
   addTask(){
     if(this.taskName.length > 0){
@@ -58,5 +63,11 @@ export class HomePage {
     });
     alert.present();
   }
+
+  logout() {
+    return this.afAuth.auth.signOut().then(authData => {
+        this.app.getRootNav().setRoot(LoginPage);
+    });
+}
 
 }
